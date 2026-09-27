@@ -25,8 +25,8 @@ import timeline  # noqa: E402
 from config import BEAT, BUILD, FPS, H, NFRAMES, RED, W  # noqa: E402
 from gfx import scenes  # noqa: E402
 
-SUB = 5            # motion-blur subframes
-SHUTTER = 0.5      # 180 degrees
+SUB = 10           # motion-blur subframes (5 strobed visibly on the fastest moves)
+SHUTTER = 0.45     # 162 degrees
 
 
 class Ctx:
@@ -198,7 +198,7 @@ def render_frame(X, f, sub=SUB):
     acc = np.zeros((H, W, 3), np.float32)
     for k in range(sub):
         tf = f + ((k + 0.5) / sub - 0.5) * SHUTTER if sub > 1 else f
-        acc += to_lin(raster(X, tf / FPS / BEAT))
+        acc += to_lin(raster(X, max(tf, 0.0) / FPS / BEAT))
     return post(acc / sub, f, X)
 
 

@@ -821,6 +821,8 @@ def draw_meta(c, b, X):
 
 
 def scene_tuple(b):
+    if b < SCENES[0][2]:
+        return SCENES[0]
     for s in SCENES:
         if s[2] <= b < s[3]:
             return s
