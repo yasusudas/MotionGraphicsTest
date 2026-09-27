@@ -1,0 +1,5 @@
+_temp_install/
+build/
+__pycache__/
+*.pyc
+*.blend1
