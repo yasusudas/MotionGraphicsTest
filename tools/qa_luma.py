@@ -29,28 +29,36 @@ for f in range(NFRAMES):
     b, g, r = (lin[sm[..., i]] for i in range(3))
     lum[f] = float((0.2126 * r + 0.7152 * g + 0.0722 * b).mean())
 
-# zig-zag with hysteresis
+# zig-zag with hysteresis: a transition is a luminance move of >= 0.1 opposite to the previous one
 ext, direction, turns = lum[0], 0, []
 for f in range(1, NFRAMES):
     v = lum[f]
-    if direction >= 0 and v > ext:
-        ext = v
-    elif direction <= 0 and v < ext:
-        ext = v
-    if direction >= 0 and ext - v > 0.1:
-        turns.append(f); direction, ext = -1, v
-    elif direction <= 0 and v - ext > 0.1:
-        turns.append(f); direction, ext = 1, v
+    if direction == 0:
+        if abs(v - ext) >= 0.1:
+            direction, ext = (1 if v > ext else -1), v
+            turns.append(f)
+    elif direction == 1:
+        if v > ext:
+            ext = v
+        elif ext - v >= 0.1:
+            direction, ext = -1, v
+            turns.append(f)
+    else:
+        if v < ext:
+            ext = v
+        elif v - ext >= 0.1:
+            direction, ext = 1, v
+            turns.append(f)
 turns = np.array(turns)
 worst, worst_at = 0, 0
 for f in range(NFRAMES):
     n = int(((turns >= f) & (turns < f + FPS)).sum())
     if n > worst:
         worst, worst_at = n, f
-flashes = worst / 2
+flashes = worst / 2          # a flash = a pair of opposing transitions
 jumps = np.abs(np.diff(lum))
 big = [(int(i + 1), round(float(jumps[i]), 3)) for i in np.argsort(jumps)[::-1][:12]]
-res = {"frames": NFRAMES, "missing": missing, "transitions": turns.tolist(),
+res = {"frames": NFRAMES, "missing": missing, "transitions": turns.tolist(), "max_transitions_per_second": worst,
        "max_flashes_per_second": flashes, "worst_window_start": worst_at,
        "pass_flash": flashes <= 3, "largest_frame_jumps": sorted(big)}
 json.dump({**res, "luma": [round(v, 4) for v in lum]}, open(BUILD / "qa_luma.json", "w"))

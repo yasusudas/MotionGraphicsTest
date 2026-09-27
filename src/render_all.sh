@@ -23,7 +23,7 @@ comp2d() { "$OPUS_PY" src/gfx/compose.py --all --workers "$WORKERS"; }
 encode() {
   ffmpeg -y -v error -framerate 30 -i "$OPUS_BUILD/comp/c_%04d.png" -i out/opus_soundtrack.wav \
     -vf "scale=in_range=full:out_range=tv:out_color_matrix=bt709,format=yuv420p" \
-    -c:v libx264 -preset slow -crf 17 -profile:v high -tune film \
+    -c:v libx264 -preset slow -crf 17 -profile:v high -tune film -x264-params "colorprim=bt709:transfer=bt709:colormatrix=bt709:range=tv" \
     -colorspace bt709 -color_primaries bt709 -color_trc bt709 \
     -c:a aac -b:a 320k -ar 48000 -shortest -movflags +faststart out/OPUS_motion_16s.mp4
   ffprobe -v error -show_entries stream=codec_name,width,height,r_frame_rate,pix_fmt,color_space,sample_rate,channels:format=duration,bit_rate \

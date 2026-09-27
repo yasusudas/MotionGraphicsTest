@@ -32,6 +32,19 @@ page numbers, registration marks and tiny figure captions. Post-processing is ke
 restrained: 5-subframe motion blur (180° shutter), highlight-only bloom, 0.07–0.4 %
 chromatic aberration (pushed by the impacts), a subtle vignette and midtone film grain.
 
+## QA (final render)
+
+- **File:** H.264 High, 1920×1080, yuv420p (tv range), BT.709 primaries/transfer/matrix,
+  30 fps, 480 frames, 16.000 s, ~23 Mbit/s (46 MB); AAC-LC 320k, 48 kHz stereo.
+- **Loudness:** −11.95 LUFS integrated, −1.02 dBTP. Sections: intro −15.2, grooves
+  −10.1 to −11.7, the FORM / WAVE / LENS breakdowns −13.6 to −13.7, finale −11.0 LUFS
+  (`out/mixlog.json`).
+- **Photosensitivity (`tools/qa_luma.py`):** 10 luminance transitions of ≥0.1 in 16 s,
+  at most 2 in any one-second window, so at most 1 flash per second (the limit is 3).
+- **Sync (`tools/qa_sync.py`):** detected audio onsets sit on the scheduled cuts
+  (2.000 / 3.500 / 5.000 / 9.500 / 11.000 / 14.000 s …). The audio is exactly the 480
+  frames long, so there is no drift.
+
 ## Pipeline
 
 ```
