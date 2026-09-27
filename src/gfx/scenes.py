@@ -441,7 +441,7 @@ def draw_S5(c, b, X, with_chrome=True):
         c.drawLine(x1, y - 7, x1, y + 7, pl)
         draw_text(c, type_on(f"Ø {2 * L.S5_DISC_R} PX", au, seed=13), cx, y - 10, mono(12), ink, a, align="center")
         # leader to the object
-        tx, ty = cx - 290, cy - 120                      # a point on the torus' left flank
+        tx, ty = cx - 262, cy - 30                       # a point on the torus left flank
         lx2, ly2 = col(4) + L.CW, row(1) + 30            # label block in the empty upper-left field
         c.drawLine(tx, ty, mix(tx, lx2, lx), mix(ty, ly2, lx), pl)
         c.drawCircle(tx, ty, 3.5, paint(ink, a))
